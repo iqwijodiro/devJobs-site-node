@@ -1,5 +1,5 @@
 <main class="container">
-    <form action="/vacancies/new" method="post" class="default-form">
+    <form action="/vacancies/new" method="POST" class="default-form">
     <h3>General Information</h3>
     <div class="field">
         <label for="title">Title</label>
@@ -38,7 +38,7 @@
     <h3>Skills</h3>
 
     <ul class="skill-list">
-        {{#selectSkills a}}
+        {{#selectSkills vacancy.skills}}
         {{/selectSkills}}
     </ul>
 

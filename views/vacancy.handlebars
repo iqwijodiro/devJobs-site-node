@@ -1,0 +1,38 @@
+<div class="top-content vacancy container">
+    <div class="box">
+        <p class="tag">Company</p>
+        <p class="name">{{vacancy.company}}</p>
+    </div>
+    <div class="box">
+        <p class="tag">Location</p>
+        <p class="name">{{vacancy.location}}</p>
+    </div>
+    <div class="box">
+        <p class="tag">Contract</p>
+        <p class="name">{{vacancy.contract}}</p>
+    </div>
+    <div class="box">
+        <p class="tag">Salary</p>
+        <p class="name">$ {{vacancy.salary}}</p>
+    </div>
+</div>
+
+<div class="vacancy-container container">
+    <main class="content">
+        <h2>Role´s description</h2>
+        <div class="vacancy-description">
+            {{{vacancy.description}}}
+        </div>
+        <a href="/vacancies/edit-vacancy/{{vacancy.url}}" class="btn btn-blue edit-btn">
+            Edit vacancy
+        </a>
+    </main>
+    <aside class="sidebar">
+        <h2>Desired Skills</h2>
+        <ul class="skills">
+            {{#each vacancy.skills}}
+                <li>{{this}}</li>
+            {{/each}}
+        </ul>
+    </aside>
+</div>

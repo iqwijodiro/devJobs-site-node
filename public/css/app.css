@@ -65,10 +65,10 @@ h3 {
     background-color: rgb(3, 133, 148);
 }
 
-.btn-amarillo {
+.btn-yellow {
     background-color: #F6B15F;
 }
-.btn-rojo {
+.btn-red {
     background-color: #C80045;
 }
 
@@ -89,7 +89,7 @@ h3 {
 
 
 .site-header {
-    min-height: 400px;
+    min-height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -215,26 +215,29 @@ h3 {
     color: #616065;
     font-size: 2.4rem;
 }
-.contenido-superior {
+.top-content {
     margin-bottom: 6rem;
 }
 @media (min-width:768px){
-    .vacante-contenedor {
+    .vacancy-container {
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
     }
-    .vacante-contenedor main{
+    .vacancy-container main{
         flex: 0 0 60%;
     }
-    .vacante-contenedor aside {
+    .vacancy-container main a.edit-btn{
+        display: inline-block;
+    }
+    .vacancy-container aside {
         flex: 0 0 calc(40% - 2rem);
     }
 }
-.vacante-descripcion h1 {
+.vacancy-description h1 {
     line-height: 1.4;
 }
-.vacante-descripcion *{
+.vacancy-description *{
     color: white!important;
     line-height: 2.2;
 }
@@ -242,7 +245,7 @@ h3 {
     color: white;
 }
 .skills li,
-.vacante-descripcion div  {
+.vacancy-description div  {
     font-size: 1.8rem;
     line-height: 2.4;
 }
@@ -338,13 +341,14 @@ trix-toolbar .trix-button--icon-strike {
     cursor: pointer;
 }
 
-.default-form .acciones {
+.default-form .actions {
     display: flex;
     justify-content: space-between;
 }
 .default-form a {
     color: #616065;
     text-decoration: none;
+    font-size: 1.25em;
 }
 
 .skill-list {
