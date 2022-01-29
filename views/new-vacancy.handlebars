@@ -1,0 +1,50 @@
+<main class="container">
+    <form action="/vacancies/new" method="post" class="default-form">
+    <h3>General Information</h3>
+    <div class="field">
+        <label for="title">Title</label>
+        <input type="text" name="title" placeholder="e.g: JavaScript Developer" required>
+    </div>
+    <div class="field">
+        <label for="company">Company</label>
+        <input type="text" name="company" placeholder="e.g: Contracting company" required>
+    </div>
+    
+    <div class="field">
+        <label for="location">Location</label>
+        <input type="text" name="location" placeholder="e.g: Cánada, Colombia, Argentina..." required>
+    </div>
+    <div class="field">
+        <label for="salary">salary</label>
+        <input type="text" name="salary" placeholder="e.g: $1500 (USD)" required>
+    </div>
+    <div class="field">
+        <label>Contract</label>
+        <select name="contract">
+            <option value="" disabled selected>--Select--</option>
+            <option value="Freelance">Freelance</option>
+            <option value="Full-Time">Full-Time</option>
+            <option value="Part-Time">Part-Time</option>
+            <option value="Projects">Projects</option>
+        </select>
+    </div>
+    <h3>Role´s Description:</h3>
+    <div class="field description">
+        <label>Description</label>
+        <input type="hidden" id="x" name="description">
+        <trix-editor input="x"></trix-editor>
+    </div>
+
+    <h3>Skills</h3>
+
+    <ul class="skill-list">
+        {{#selectSkills a}}
+        {{/selectSkills}}
+    </ul>
+
+    <div class="field center-horizontal">
+        <input type="hidden" name="skills" id="skills">
+        <input type="submit" value="Post" class="btn btn-blue">
+    </div>
+    </form>
+</main>

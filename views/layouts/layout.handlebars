@@ -5,17 +5,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="/css/trix.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>{{ pageName }}</title>
 </head>
 <body>
-    <div class="nombre-sitio contenedor">
+    <div class="site-name container">
         <h1>
             <a href="/">devJobs</a>
         </h1>
+
+        {{#if bar}}
+            <div class="searcher">
+                <form action="#">
+                    <input type="text" class="search">
+                    <input type="submit" value="Search jobs">
+                </form>
+            </div>
+        {{/if}}
     </div>
-    <main class="main-content container">
-        {{ body }}
-    </main>
+
+    <header class="site-header container separator">
+        <h2>{{pageName}}</h2>
+        {{#if tagline}}
+            <p class="tagline">{{tagline}}</p>
+        {{/if}}
+        {{#if btn}}
+            <a href="/vacancies/new" class="btn btn-blue">
+                Post a New Vacancy
+            </a>
+        {{/if}}
+    </header>
+
+    <div class="main-content container">
+        {{{ body }}}
+    </div>
+
+    <script src="/js/trix.js"></script>
+    <script src="/dist/bundle.js"></script>
 </body>
 </html>

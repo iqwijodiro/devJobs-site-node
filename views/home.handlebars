@@ -1,1 +1,26 @@
-<h1>From home</h1>
+<main class="vacancies-list">
+  <h2>Vacancies</h2>
+  {{#if vacancies.length}}
+    {{#each vacancies}}
+      <div class="vacancy">
+        <div class="box">
+          <h3>{{company}}</h3>
+          <p class="role">{{title}}</p>
+        </div>
+        <div class="box">
+          <p class="tag">Location</p>
+          <p class="name">{{location}}</p>
+        </div>
+        <div class="box">
+          <p class="tag">Contract</p>
+          <p class="name contract">{{contract}}</p>
+        </div>
+        <div class="box center-vertical">
+          <a href="/vacancies/{{url}}" class="btn btn-green">More Info</a>
+        </div>
+      </div>
+    {{/each}}
+  {{else}}
+    <p>There´s no vacancies avalaibles</p>
+  {{/if}}
+</main>
