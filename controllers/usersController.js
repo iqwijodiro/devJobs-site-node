@@ -9,6 +9,12 @@ exports.formCreateAccount = (req, res) => {
 }
 
 exports.createUser = async (req, res, next) => {
-    const user = new User(req.body)
-    console.log(user);
+    const user = new Users(req.body);
+    const newUser = await user.save();
+
+    if (!newUser) {
+        return next();
+    }
+
+    res.redirect('/login');
 }
