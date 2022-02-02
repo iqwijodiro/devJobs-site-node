@@ -1,10 +1,14 @@
-const mongoose = require('mongoose');
-const Vacancy = mongoose.model('Vacancy')
+// const mongoose = require('mongoose');
+// const Vacancy = mongoose.model('Vacancy')
+const Vacancy = require('../models/Vacancies')
+const { body, validationResult } = require('express-validator');
 
 exports.formNewVacancy = (req, res) => {
     res.render('new-vacancy', {
         pageName: 'New Vacancy',
         tagline: 'Fill the form and post your vacancy',
+        logOut: true,
+        name: req.user.name
     })
 }
 
@@ -12,6 +16,9 @@ exports.formNewVacancy = (req, res) => {
 
 exports.addVacancy = async (req, res) => {
     const vacancy = new Vacancy(req.body);
+
+    // User who create the vacancy
+    vacancy.author = req.user._id;
 
     // Create a Skills Array
     vacancy.skills = req.body.skills.split(',');
@@ -49,7 +56,9 @@ exports.formEditVacancy = async (req, res, next) => {
 
     res.render('edit-vacancy', {
         vacancy,
-        pageName: `Editar -${vacancy.title}`
+        pageName: `Editar -${vacancy.title}`,
+        logOut: true,
+        name: req.user.name
     })
 }
 
@@ -65,3 +74,31 @@ exports.editVacancy = async (req, res) => {
 
     res.redirect(`/vacancies/${vacancy.url}`);
 }
+
+// Validate fields
+
+exports.validateVacancy = async (req, res, next) => {
+    const rules = [
+        body('title').not().isEmpty().withMessage('Add a title to the vacancy').escape(),
+        body('company').not().isEmpty().withMessage('Add a company').escape(),
+        body('location').not().isEmpty().withMessage('Add a location').escape(),
+        body('contract').not().isEmpty().withMessage('Select a contract type').escape(),
+        body('skills').not().isEmpty().withMessage('Add one skill at least').escape()
+    ]
+
+    await Promise.all(rules.map( (validation) => validation.run(req) ) );
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        req.flash('error', errors.array().map( (error) => error.msg ));
+        res.render('new-vacancy', {
+            pageName: 'New Vacancy',
+            tagline: 'Fill the form and post your vacancy',
+            logOut: true,
+            name: req.user.name,
+            messages: req.flash('correct', 'Ready to post')
+        });
+        return;
+    }
+    next();
+};

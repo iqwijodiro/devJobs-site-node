@@ -23,6 +23,14 @@
                 </form>
             </div>
         {{/if}}
+
+        {{#if logOut}}
+            <div class="logout">
+                <p>Hi, {{name}}!</p>
+                <a href="/admin-user">Admin-profile</a>
+                <a href="/logout">Log Out</a>
+            </div>
+        {{/if}}
     </div>
 
     <header class="site-header container separator">
@@ -36,8 +44,14 @@
             </a>
         {{/if}}
     </header>
-
+    
     <div class="main-content container">
+        {{#if messages}}
+            <div class="alerts">
+                {{#showAlerts messages}}
+                {{/showAlerts}}
+            </div>
+        {{/if}}
         {{{ body }}}
     </div>
 

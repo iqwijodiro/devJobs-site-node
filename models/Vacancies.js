@@ -40,7 +40,12 @@ const vacanciesSchema = new mongoose.Schema({
         name: String,
         email: String,
         cv: String
-    }]
+    }],
+    author: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Users',
+        required: 'Vacancy\'s author is required'
+    }
 })
 vacanciesSchema.pre('save', function (next) {
     const url = slug(this.title);

@@ -35,4 +35,21 @@ usersSchema.pre('save', async function (next) {
 
 })
 
+// Show an alert when user is already registered
+usersSchema.post('save', function (error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+        next('That email is already registered');
+    } else {
+        next(error);
+    }
+    console.log(error);
+})
+
+// Authenticate the user
+usersSchema.methods = {
+    comparePassword: function (password) {
+        return bcrypt.compareSync(password, this.password)
+    }
+}
+
 module.exports = mongoose.model('Users', usersSchema);
