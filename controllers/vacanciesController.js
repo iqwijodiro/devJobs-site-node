@@ -185,8 +185,8 @@ exports.contactJob = async (req, res, next) => {
         email: req.body.email,
         resume: req.file.filename
     }
-    // console.log(newApplicant);
-    // Store vacancy
+
+    // Save vacancy
     vacancy.applicants.push(newApplicant);
     await vacancy.save();
 
