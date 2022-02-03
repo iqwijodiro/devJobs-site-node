@@ -1,9 +1,54 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 // const Users = mongoose.model('Users');
 const Users = require('../models/Users');
 // import Users from "../models/Users";
 const { body, validationResult } = require('express-validator')
+const multer = require('multer');
+const shortid = require('shortid');
 
+exports.uploadImage = (req, res, next) => {
+    upload(req, res, function(error) {
+        if (error) {
+            if (error instanceof multer.MulterError) {
+                if (error.code === "LIMIT_FILE_SIZE") {
+                    req.flash('error', 'File it´s too large: don´t exceed 100kb')
+                } else {
+                    req.flash('error', error.message)
+                }
+            } else {
+                req.flash('error', error.message);
+            }
+            res.redirect('/edit-profile');
+            return;
+        } else {
+            return next();
+        }
+    });
+}
+
+// Multer configuration
+
+const configMulter = {
+    limits: { fileSize: 100000 },
+    storage: fileStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, __dirname+'../../public/uploads/profiles');
+        },
+        filename: (req, file, cb) => {
+            const extension = file.mimetype.split('/')[1];
+            cb(null, `${shortid.generate()}.${extension}`);
+        }
+    }),
+    fileFilter( req, file, cb) {
+        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' ) {
+            cb(null, true)
+        } else {
+            cb(new Error('File extension not supported'))
+        }
+    }
+}
+
+const upload = multer( configMulter ).single('image');
 
 exports.validateRegister = async (req, res, next) => {
     // Cleaning fields
@@ -61,7 +106,8 @@ exports.formEditProfile = (req, res) => {
         pageName: 'Edit your profile',
         user: req.user,
         logOut: true,
-        name: req.user.name
+        name: req.user.name,
+        image: req.user.image
     })
 }
 
@@ -75,6 +121,10 @@ exports.updateProfile = async (req, res) => {
     if (req.body.password) {
         user.password = req.body.password
     }
+
+    if (req.file) {
+        user.image = req.file.filename;
+    };
     await user.save();
 
     req.flash('correct', 'Saved succesfully');
@@ -87,7 +137,7 @@ exports.updateProfile = async (req, res) => {
 
 exports.validateProfile = async (req, res, next) => {
     
-    if (req.body.password === '') {
+    if (req.body.name === '' && req.body.email === '') {
         const rules = [
             body('name').not().isEmpty().withMessage('The name is required').escape(),
             body('email').isEmail().withMessage('Email is required').normalizeEmail(),
@@ -103,31 +153,11 @@ exports.validateProfile = async (req, res, next) => {
                 user: req.user,
                 logOut: true,
                 name: req.user.name,
+                image: req.user.image,
                 messages: req.flash()
             })
             return;
         }
         next();
-    } else {
-        const rules = [
-            body('name').not().isEmpty().withMessage('The name is required').escape(),
-            body('email').isEmail().withMessage('Email is required').normalizeEmail()
-        ]
-        await Promise.all(rules.map( validation => validation.run(req)));
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            req.flash('error', errors.array().map( error => error.msg ))
-            res.render('edit-profile', {
-                pageName: 'Edit your profile',
-                user: req.user,
-                logOut: true,
-                name: req.user.name,
-                messages: req.flash()
-            })
-            return;
-        }
-        next();
-    }
-
-    
+    } 
 }

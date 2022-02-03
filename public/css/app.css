@@ -251,11 +251,11 @@ h3 {
 }
 
 
-.enviar-datos h2 {
+.send-data h2 {
     font-size: 4rem;
     color: white;
 }
-.enviar-datos p {
+.send-data p {
     color: white;
     font-size: 1.8rem;
 }
@@ -408,9 +408,16 @@ p.applicants {
     color: #616065;
 }
 .admin-profile {
-    width: 120px;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
     align-self: flex-start;
     margin-right: 1rem;
+    border-radius: 50%;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
 }
 .logout p, 
 .logout a {
@@ -491,22 +498,22 @@ p.applicants {
 
 
 /** Biografia search **/
-.info-reclutador h2 {
+.recruiter-info h2 {
     color: #616065;
     font-size: 2.4rem;
 }
-.info-reclutador img {
-    max-width: 300px;
+.recruiter-info img {
+    max-width: 200px;
     width: 100%;
 }
-.datos-reclutador {
+.data-recruiter {
     border-top: 3px solid #272727;
     padding: 5rem 0;
     display: flex;
     justify-content: space-between;
     margin-top: 4rem;
 }
-.datos-reclutador p {
+.data-recruiter p {
     font-size: 2.4rem;
     color: white;
 }
@@ -514,15 +521,15 @@ p.applicants {
     .enviar-datos {
         flex: 0 0 calc(70% - 1rem);
     }
-    .info-reclutador {
+    .recruiter-info {
         flex: 0 0 calc(30% - 1rem );
     }
 }
-.enviar-datos h2 {
+.send-data h2 {
     font-size: 4rem;
     color: white;
 }
-.enviar-datos p {
+.send-data p {
     color: white;
     font-size: 1.8rem;
 }

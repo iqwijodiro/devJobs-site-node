@@ -20,7 +20,8 @@ const usersSchema = new mongoose.Schema({
         trim: true
     },
     token: String, 
-    expire: Date
+    expire: Date,
+    image: String
 });
 
 // Password Hash Method

@@ -36,3 +36,36 @@
         </ul>
     </aside>
 </div>
+
+<div class="container data-recruiter">
+    <div class="send-data">
+        <h2>Contact to Recruiter</h2>
+        <p>Send your resume and we´ll contact you</p>
+        <form action="/vacancies/{{vacancy.url}}" method="post" class="default-form" enctype="multipart/form-data">
+            <div class="field">
+                <label>Name</label>
+                <input type="text" name="name" placeholder="Your name">
+            </div>
+            <div class="field">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="Your Email">
+            </div>
+            <div class="field">
+                <label>Resume <small>(PDF)</small></label>
+                <input type="file" name="resume">
+            </div>
+            <div class="field">
+                <input type="submit" value="Send" class="btn btn-green">
+            </div>
+        </form>
+    </div>
+    <div class="recruiter-info">
+        <h2>Recruiter information</h2>
+        {{#if vacancy.author.name}}
+            <p>{{vacancy.author.name}}</p>
+        {{/if}}
+        {{#if vacancy.author.image}}
+            <img src="/uploads/profiles/{{vacancy.author.image}}">
+        {{/if}}
+    </div>
+</div>

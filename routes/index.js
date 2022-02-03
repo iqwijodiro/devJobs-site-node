@@ -21,6 +21,11 @@ module.exports = () => {
   //Show vacancy (one)
   router.get('/vacancies/:url', vacanciesController.showVacancy)
 
+  //Delete Vacancies
+
+  router.delete('/vacancies/delete/:id',
+            vacanciesController.deleteVacancy)
+
   // Edit Vacancy
   router.get('/vacancies/edit-vacancy/:url', 
         authController.checkUser, 
@@ -54,8 +59,13 @@ module.exports = () => {
         usersController.formEditProfile)
   router.post('/edit-profile', 
         authController.checkUser, 
-        usersController.validateProfile, 
+      //   usersController.validateProfile,
+      usersController.uploadImage,
         usersController.updateProfile)
+
+  router.post('/vacancies/:url',
+            vacanciesController.uploadResume,
+            vacanciesController.contactJob)
 
   return router;
 };

@@ -26,6 +26,9 @@
 
         {{#if logOut}}
             <div class="logout">
+                {{#if image}}
+                    <img src="/uploads/profiles/{{image}}" alt="{{name}}´s image" class="admin-profile">
+                {{/if}}
                 <p>Hi, {{name}}!</p>
                 <a href="/admin-user">Admin-profile</a>
                 <a href="/logout">Log Out</a>

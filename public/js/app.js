@@ -1,3 +1,6 @@
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
 document.addEventListener('DOMContentLoaded', () => {
     const skills = document.querySelector('.skill-list');
 
@@ -12,6 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // When We are editing
         skillsSelected();
+    }
+
+    const vacanciesList = document.querySelector('.admin-panel');
+
+    if (vacanciesList) {
+        vacanciesList.addEventListener('click', actionsList)
     }
 })
 
@@ -60,4 +69,50 @@ const removeAlerts = () => {
     }, 3000)
 }
 
-// alert('works')
+const actionsList = (e) => {
+    e.preventDefault();
+
+    if (e.target.dataset.delete) {
+        // // Deleted by axios
+
+        Swal.fire({
+            title: 'Are you sure you want to delete?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+          }).then((result) => {
+            if (result.isConfirmed) {
+                const url = `${location.origin}/vacancies/delete/${e.target.dataset.delete}`;
+                
+                // Send axios´s request to delete
+                axios.delete( url, {params: {url}})
+                    .then(function(data) {
+                        if (data.status === 200) {
+                            Swal.fire(
+                                'Vacancy Deleted!',
+                                data.data,
+                                'success'
+                              );
+                            
+                            e.target.parentElement.parentElement.parentElement.removeChild(e.target.parentElement.parentElement);
+                        };
+                    })
+                    .catch(() =>{
+                        Swal.fire({
+                            type: 'error',
+                            title: 'Request failured',
+                            text: 'There was an error in the matrix'
+                        })
+                    })
+
+            
+            }
+          })
+    } else if (e.target.tagName === 'A'){
+        window.location.href = e.target.href;
+    }
+}

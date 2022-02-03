@@ -2,13 +2,16 @@
 // const Vacancy = mongoose.model('Vacancy')
 const Vacancy = require('../models/Vacancies')
 const { body, validationResult } = require('express-validator');
+const multer = require('multer');
+const shortid = require('shortid');
 
 exports.formNewVacancy = (req, res) => {
     res.render('new-vacancy', {
         pageName: 'New Vacancy',
         tagline: 'Fill the form and post your vacancy',
         logOut: true,
-        name: req.user.name
+        name: req.user.name,
+        image: req.user.image,
     })
 }
 
@@ -33,8 +36,8 @@ exports.addVacancy = async (req, res) => {
 
 // Show the vacancy selected
 exports.showVacancy = async (req, res, next) => {
-    const vacancy = await Vacancy.findOne({ url: req.params.url }).lean();
-
+    const vacancy = await Vacancy.findOne({ url: req.params.url }).populate('author').lean();
+    // console.log(vacancy);
     // If there´s no results
     if (!vacancy) return next();
 
@@ -58,7 +61,8 @@ exports.formEditVacancy = async (req, res, next) => {
         vacancy,
         pageName: `Editar -${vacancy.title}`,
         logOut: true,
-        name: req.user.name
+        name: req.user.name,
+        image: req.user.image
     })
 }
 
@@ -96,9 +100,98 @@ exports.validateVacancy = async (req, res, next) => {
             tagline: 'Fill the form and post your vacancy',
             logOut: true,
             name: req.user.name,
+            image: req.user.image,
             messages: req.flash('correct', 'Ready to post')
         });
         return;
     }
     next();
 };
+
+exports.deleteVacancy = async (req, res) => {
+    const { id } = req.params;
+    const vacancy = await Vacancy.findById(id)
+
+    if (checkAuthor(vacancy, req.user)) {
+        vacancy.remove();
+        res.status(200).send('Vacancy deleted succesfully')
+    } else {
+        res.status(403).send('Error to delete')
+    }
+
+}
+
+const checkAuthor = (vacancy = {}, user = {}) => {
+    if (!vacancy.author.equals(user._id)) {
+        return false;
+    }
+    return true;
+}
+
+
+exports.uploadResume = (req, res, next) => {
+    upload(req, res, function(error) {
+        if (error) {
+            if (error instanceof multer.MulterError) {
+                if (error.code === "LIMIT_FILE_SIZE") {
+                    req.flash('error', 'File it´s too large: don´t exceed 1 Mb')
+                } else {
+                    req.flash('error', error.message)
+                }
+            } else {
+                req.flash('error', error.message);
+            }
+            res.redirect('back');
+            return;
+        } else {
+            return next();
+        }
+    });
+    
+}
+// Multer configuration
+
+const configMulter = {
+    limits: { fileSize: 1000000 },
+    storage: fileStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, __dirname+'../../public/uploads/resumes');
+        },
+        filename: (req, file, cb) => {
+            const extension = file.mimetype.split('/')[1];
+            cb(null, `${shortid.generate()}.${extension}`);
+        }
+    }),
+    fileFilter( req, file, cb) {
+        if (file.mimetype === 'application/pdf' ) {
+            cb(null, true)
+        } else {
+            cb(new Error('File extension not supported'))
+        }
+    }
+}
+
+const upload = multer( configMulter ).single('resume');
+
+exports.contactJob = async (req, res, next) => {
+    const vacancy = await Vacancy.findOne( { url: req.params.url });
+
+    // If there´s no vacancy
+    if (!vacancy) return next();
+
+    // Everything is right
+    const newApplicant = {
+        name: req.body.name,
+        email: req.body.email,
+        resume: req.file.filename
+    }
+    // console.log(newApplicant);
+    // Store vacancy
+    vacancy.applicants.push(newApplicant);
+    await vacancy.save();
+
+    req.flash('correct', 'Your resume has been sent successfully');
+    res.redirect('/');
+
+
+}
