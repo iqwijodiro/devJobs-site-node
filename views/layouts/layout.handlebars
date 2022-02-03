@@ -17,8 +17,8 @@
 
         {{#if bar}}
             <div class="searcher">
-                <form action="#">
-                    <input type="text" class="search">
+                <form action="/search" method="post">
+                    <input type="text" name="q" class="search">
                     <input type="submit" value="Search jobs">
                 </form>
             </div>

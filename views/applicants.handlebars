@@ -1,0 +1,22 @@
+<main class="applicants-list">
+    <h2>Applicants List</h2>
+    {{#if applicants.length}}
+        {{#each applicants}}
+            <div class="applicant">
+                <div class="box">
+                    <p class="tag">Name:</p>
+                    <p class="name">{{name}}</p>
+                </div>
+                <div class="box">
+                    <p class="tag">Email:</p>
+                    <p class="name">{{email}}</p>
+                </div>
+                <div class="box">
+                    <a href="/uploads/resumes/{{resume}}" class="btn btn-green">View Resume</a>
+                </div>
+            </div>
+        {{/each}}
+    {{else }}
+        <p>There´s no applicants yet</p>
+    {{/if}}
+</main>

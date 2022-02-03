@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 // const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const passport = require('./config/passport');
+const createError = require('http-errors');
 
 require('dotenv').config({ path: 'variables.env'});
 
@@ -46,6 +47,7 @@ app.use(session({
 
 // Alerts & flash messages
 app.use(flash());
+
 // Init passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -60,4 +62,22 @@ app.use((req, res, next) => {
 // Router
 app.use('/', router());
 
-app.listen(process.env.PORT);
+// Route errors
+app.use((req, res, next) => {
+    next(createError(404, 'Request Not Found'))
+})
+
+// Errors admin
+app.use((error, req, res, next)=>{
+    res.locals.message = error.message;
+    const status = error.status || 500;
+    res.locals.status = status;
+    res.status(status);
+    res.render('error');
+})
+
+const host = '0.0.0.0';
+const port = process.env.PORT
+app.listen(port, host, ()=>{
+    console.log('Server Running');
+});

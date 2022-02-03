@@ -4,6 +4,7 @@ const Vacancy = require('../models/Vacancies')
 const { body, validationResult } = require('express-validator');
 const multer = require('multer');
 const shortid = require('shortid');
+const { logOut } = require('./authController');
 
 exports.formNewVacancy = (req, res) => {
     res.render('new-vacancy', {
@@ -194,4 +195,35 @@ exports.contactJob = async (req, res, next) => {
     res.redirect('/');
 
 
+}
+
+exports.showApplicants = async (req, res, next) => {
+    const vacancy = await Vacancy.findById(req.params.id).lean();
+
+    if (vacancy.author != req.user._id.toString()) return next();
+
+    if (!vacancy) return next();
+
+    res.render('applicants', {
+        pageName: `Applicants to: ${vacancy.title}`,
+        logOut: true,
+        name: req.user.name,
+        image: req.user.image,
+        applicants: vacancy.applicants
+    })
+
+}
+
+exports.searchVacancies = async (req, res) => {
+    const vacancies = await Vacancy.find({
+        $text: {
+            $search: req.body.q
+        }
+    }).lean();
+
+    res.render('home', {
+        pageName: `Search results: ${req.body.q}`,
+        bar: true,
+        vacancies
+    })
 }

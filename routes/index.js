@@ -48,6 +48,14 @@ module.exports = () => {
   // Log Out
   router.get('/logout', authController.checkUser, authController.logOut)
 
+  // Reset the password (emails)
+  router.get('/reset-password', authController.formResetPassword)
+  router.post('/reset-password', authController.sendToken)
+
+  // Reset Password (store to dB)
+  router.get('/reset-password/:token', authController.resetPassword )
+  router.post('/reset-password/:token', authController.updatePassword )
+  
   // Admin Panel
   router.get('/admin-user',
         authController.checkUser, 
@@ -66,6 +74,12 @@ module.exports = () => {
   router.post('/vacancies/:url',
             vacanciesController.uploadResume,
             vacanciesController.contactJob)
+
+  router.get('/applicants/:id',
+      authController.checkUser,
+      vacanciesController.showApplicants)
+
+      router.post('/search', vacanciesController.searchVacancies)
 
   return router;
 };
